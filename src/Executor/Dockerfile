@@ -1,4 +1,19 @@
 ﻿FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+
+# Install dependencies for Isolate
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    libcap-dev \
+    libsystemd-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/* 
+
+# Clone the Isolate repository and build it
+RUN git clone https://github.com/ioi/isolate.git /isolate && \
+    cd /isolate && \
+    make install
+    
 USER $APP_UID
 WORKDIR /app
 

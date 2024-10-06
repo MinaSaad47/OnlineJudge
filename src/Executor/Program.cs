@@ -15,7 +15,12 @@ builder.Services.AddMassTransit(x =>
 {
     x.AddConsumers(Assembly.GetExecutingAssembly());
 
-    x.UsingRabbitMq((context, cfg) => cfg.ConfigureEndpoints(context));
+    x.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host(builder.Configuration["Masstransit:RabbitMQ:Host"]);
+
+        cfg.ConfigureEndpoints(context);
+    });
 });
 
 var host = builder.Build();

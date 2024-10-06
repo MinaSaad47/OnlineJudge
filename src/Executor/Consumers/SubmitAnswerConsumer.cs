@@ -166,7 +166,8 @@ public class SubmitAnswerConsumer(
             {
                 FileName = "isolate",
                 Arguments = arguments,
-                RedirectStandardError = true
+                RedirectStandardError = true,
+                RedirectStandardOutput = true
             }
         };
         process.Start();
