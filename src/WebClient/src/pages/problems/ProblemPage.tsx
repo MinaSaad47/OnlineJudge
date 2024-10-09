@@ -5,7 +5,9 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import ProblemEditor from "@/pages/problems/components/ProblemEditor";
+import ProblemHeader from "@/pages/problems/components/ProblemHeader";
 import ProblemStatement from "@/pages/problems/components/ProblemStatement";
+import { ProblemStoreProvider } from "@/stores/problem-store";
 import { useQuery } from "@apollo/client";
 import { Spinner } from "@nextui-org/react";
 import { useParams } from "react-router-dom";
@@ -41,21 +43,26 @@ const ProblemPage = () => {
   }
 
   return (
-    <ResizablePanelGroup direction='horizontal' className='flex-1'>
-      <ResizablePanel defaultSize={50} className='p-2'>
-        <ProblemStatement problem={data!.problemBySlug!} />
-      </ResizablePanel>
-      <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={50}>
-        <ResizablePanelGroup direction='vertical'>
+    <ProblemStoreProvider problemId={data!.problemBySlug!.id}>
+      <div className='flex flex-col h-screen'>
+        <ProblemHeader />
+        <ResizablePanelGroup direction='horizontal' className='flex-grow'>
           <ResizablePanel defaultSize={50} className='p-2'>
-            <ProblemEditor />
+            <ProblemStatement problem={data!.problemBySlug!} />
           </ResizablePanel>
           <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={50}></ResizablePanel>
+          <ResizablePanel defaultSize={50}>
+            <ResizablePanelGroup direction='vertical'>
+              <ResizablePanel defaultSize={50} className='p-2'>
+                <ProblemEditor />
+              </ResizablePanel>
+              <ResizableHandle withHandle />
+              <ResizablePanel defaultSize={50}></ResizablePanel>
+            </ResizablePanelGroup>
+          </ResizablePanel>
         </ResizablePanelGroup>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+      </div>
+    </ProblemStoreProvider>
   );
 };
 

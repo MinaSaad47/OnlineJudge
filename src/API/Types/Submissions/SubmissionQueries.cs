@@ -1,8 +1,7 @@
 using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
-using OnlineJudge.API.Domain.Entities;
+using OnlineJudge.API.Application.Session;
 using OnlineJudge.API.Infrastructure.Persistence;
-using OnlineJudge.API.Types.Shared;
 using Submission = OnlineJudge.API.Domain.Entities.Submission;
 
 namespace OnlineJudge.API.Types.Submissions;
@@ -24,15 +23,15 @@ public static class SubmissionQueries
 
     [UseOffsetPaging]
     public static ValueTask<CollectionSegment<Submission>> GetSubmissionsAsync(
-        [CurrentUser] User? user,
+        [GlobalState] OnlineJudgeSession session,
         [Service] OnlineJudgeContext context,
         int? skip,
         int? take)
     {
-        if (user is null) return default!;
+        if (session.CurrentUser is null) return default!;
 
         return context.Submissions
-            .Where(s => s.SubmitterId == user.Id)
+            .Where(s => s.SubmitterId == session.CurrentUser.Id)
             .OrderBy(p => p.Status.Kind)
             .ThenBy(p => p.Id)
             .ApplyOffsetPaginationAsync(skip, take);

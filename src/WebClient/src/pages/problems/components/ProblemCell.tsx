@@ -1,5 +1,5 @@
 import { FragmentType, gql, useFragment } from "@/__codegen__";
-import { Chip, Link } from "@nextui-org/react";
+import { Link } from "@nextui-org/react";
 import React from "react";
 
 const ProblemCell_ProblemFragment = gql(`
@@ -9,11 +9,6 @@ const ProblemCell_ProblemFragment = gql(`
         title
         maxMemoryString
         maxTimeString
-        submissions {
-          items {
-            id
-          }
-        }
     }
 `);
 
@@ -40,13 +35,6 @@ function ProblemCell(props: ProblemCellProps) {
       return <div>{problem.maxMemoryString}</div>;
     case "maxTime":
       return <div>{problem.maxTimeString}</div>;
-    case "status": {
-      const submission = problem.submissions?.items?.[0];
-      if (submission) {
-        return <Chip color='success'>Accepted</Chip>;
-      }
-      return <Chip color='default'>Not Solved</Chip>;
-    }
     default:
       return <></>;
   }

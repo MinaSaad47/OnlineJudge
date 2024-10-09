@@ -17,10 +17,11 @@ function App() {
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
 
+          <Route path='/problems/:slug' element={<ProblemPage />} />
+
           <Route path='/' element={<AppLayout />}>
             <Route path='/' element={<HomePage />} />
             <Route path='/problems' element={<ProblemsPage />} />
-            <Route path='/problems/:slug' element={<ProblemPage />} />
           </Route>
         </Routes>
       </main>

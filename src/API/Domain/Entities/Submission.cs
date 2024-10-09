@@ -9,11 +9,17 @@ public class Submission
     public string SourceCode { get; init; } = default!;
     public string LanguageId { get; init; } = default!;
     public SubmissionStatus Status { get; set; } = SubmissionStatus.Pending();
+    public DateTimeOffset SubmittedAt { get; init; } = DateTimeOffset.UtcNow;
 
     public User Submitter { get; init; } = default!;
     public Problem Problem { get; init; } = default!;
     public Contest? Contest { get; init; } = default!;
     public Language Language { get; init; } = default!;
+
+    public bool IsFinished => Status.Kind is SubmissionStatusKind.Accepted
+        or SubmissionStatusKind.Rejected
+        or SubmissionStatusKind.CompileError
+        or SubmissionStatusKind.RuntimeError;
 }
 
 public enum SubmissionStatusKind
@@ -77,4 +83,10 @@ public class SubmissionStatus
         return new SubmissionStatus
             { Kind = SubmissionStatusKind.RuntimeError, Error = error };
     }
+}
+
+public static partial class DomainExceptions
+{
+    public class SubmissionNotFoundException(Guid id)
+        : Exception($"Submission with id {id} not found");
 }

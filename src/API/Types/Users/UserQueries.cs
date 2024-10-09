@@ -1,8 +1,8 @@
 using MediatR;
+using OnlineJudge.API.Application.Session;
 using OnlineJudge.API.Application.Users.Queries;
 using OnlineJudge.API.Domain.Entities;
 using OnlineJudge.API.Features.Users.Queries;
-using OnlineJudge.API.Types.Shared;
 
 namespace OnlineJudge.API.Types.Users;
 
@@ -26,9 +26,9 @@ public static class UserQueries
     }
 
     public static User? GetMe(
-        [CurrentUser] User user,
+        OnlineJudgeSession session,
         CancellationToken cancellationToken)
     {
-        return user;
+        return session.CurrentUser;
     }
 }

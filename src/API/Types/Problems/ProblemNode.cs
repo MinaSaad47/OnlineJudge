@@ -1,6 +1,10 @@
+using HotChocolate.Authorization;
+using HotChocolate.Pagination;
 using HotChocolate.Types.Pagination;
+using MediatR;
+using OnlineJudge.API.Application.Problems.Queries;
+using OnlineJudge.API.Application.Session;
 using OnlineJudge.API.Domain.Entities;
-using OnlineJudge.API.Infrastructure.Persistence;
 
 namespace OnlineJudge.API.Types.Problems;
 
@@ -21,14 +25,19 @@ public static partial class ProblemNode
         return problem.MaxTime.TotalSeconds.ToString("0.00") + " Sec";
     }
 
-    [UseOffsetPaging]
-    public static ValueTask<CollectionSegment<Submission>> GetSubmissionsAsync(
+    [Authorize]
+    [UsePaging]
+    public static Task<Connection<Submission>> GetSubmissionsAsync(
         [Parent] Problem problem,
-        [Service] OnlineJudgeContext context,
+        PagingArguments pagingArgs,
+        OnlineJudgeSession session,
+        ISender sender,
         CancellationToken cancellationToken)
     {
-        return context.Submissions
-            .Where(s => s.ProblemId == problem.Id)
-            .ApplyOffsetPaginationAsync(0, 10, cancellationToken);
+        return sender.Send(new GetProblemSubmissionsQuery(problem.Id,
+                    pagingArgs,
+                    session.CurrentUser!),
+                cancellationToken)
+            .ToConnectionAsync();
     }
 }

@@ -1,53 +1,21 @@
-import { gql } from "@/__codegen__";
-import { useQuery } from "@apollo/client";
+import useProblemStore from "@/stores/problem-store";
 import Editor from "@monaco-editor/react";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Select,
-  SelectItem,
-  Spinner,
-} from "@nextui-org/react";
-import { useState } from "react";
-
-const ProblemEditor_LanguagesQuery = gql(`
-    query ProblemEditor_LanguagesQuery {
-        languages {
-            id
-            name
-        }
-    }
-`);
+import { Card, CardBody, CardHeader } from "@nextui-org/react";
 
 function ProblemEditor() {
-  const { data, loading } = useQuery(ProblemEditor_LanguagesQuery);
-  const [language, setLanguage] = useState(data?.languages[0].name ?? "cpp");
-
-  if (loading) {
-    return <Spinner className='size-full' />;
-  }
+  const sourceCode = useProblemStore((state) => state.sourceCode);
+  const setSourceCode = useProblemStore((state) => state.setSourceCode);
 
   return (
     <Card className='h-full'>
-      <CardHeader className='flex p-1 item-center shadow-large'>
-        <h2 className='text-lg font-bold'>Problem Editor</h2>
-        <Select
-          label='Language'
-          value={language}
-          defaultSelectedKeys={[language]}
-          className='w-[25%] ml-auto'
-          labelPlacement='inside'
-          size='sm'
-          onChange={(e) => setLanguage(e.target.value)}>
-          {data!.languages.map((language) => (
-            <SelectItem key={language.id}>{language.name}</SelectItem>
-          ))}
-        </Select>
+      <CardHeader className='flex h-8 p-1 item-center shadow-large'>
+        <h2 className='font-bold'>Problem Editor</h2>
       </CardHeader>
       <CardBody className='p-0 overflow-clip'>
         <Editor
-          language={language}
+          language={"cpp"}
+          value={sourceCode}
+          onChange={(value) => setSourceCode(value ?? "")}
           theme='vs-dark'
           options={{
             minimap: { enabled: false },

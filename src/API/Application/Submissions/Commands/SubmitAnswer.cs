@@ -2,7 +2,6 @@ using Humanizer;
 using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using OnlineJudge.API.Application.Session;
 using OnlineJudge.API.Domain.Entities;
 using OnlineJudge.API.Infrastructure.Persistence;
 using OnlineJudge.Contracts.Messages;
@@ -19,7 +18,6 @@ public record SubmitAnswerCommand(
 
 public class SubmitAnswerHandler(
     OnlineJudgeContext context,
-    IOnlineJudgeSession session,
     IPublishEndpoint publishEndpoint)
     : IRequestHandler<SubmitAnswerCommand, Submission>
 {

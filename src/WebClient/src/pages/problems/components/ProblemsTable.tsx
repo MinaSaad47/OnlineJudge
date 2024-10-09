@@ -12,16 +12,18 @@ import {
 } from "@nextui-org/react";
 
 const ProblemsTable_ProblemsQuery = gql(`
-  query ProblemsTable_ProblemsQuery($skip: Int!, $take: Int!) {
-    problems(skip: $skip, take: $take) {
-        items {
-            id
-            ... ProblemCell_ProblemFragment
+  query ProblemsTable_ProblemsQuery($after: String) {
+    
+    problems(first: 10, after: $after) {
+      edges {
+        node {
+          id
+          ... ProblemCell_ProblemFragment
         }
-        pageInfo {
-            hasNextPage
-            hasPreviousPage
-        }
+      }
+      pageInfo {
+        endCursor
+      }
     }
   }
 `);
@@ -53,12 +55,11 @@ const columns = [
 export default function ProblemsTable() {
   const { data, loading } = useQuery(ProblemsTable_ProblemsQuery, {
     variables: {
-      skip: 0,
-      take: 10,
+      after: null,
     },
   });
 
-  const problems = data?.problems?.items ?? [];
+  const problems = data?.problems?.edges?.map((edge) => edge.node) ?? [];
 
   return (
     <Table isCompact selectionMode='none'>

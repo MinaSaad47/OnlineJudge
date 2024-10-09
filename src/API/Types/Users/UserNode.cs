@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using HotChocolate.Authorization;
 using MediatR;
 using OnlineJudge.API.Application.Users.Queries;
@@ -27,13 +25,11 @@ public static partial class UserNode
 
     [Authorize]
     public static Task<IReadOnlyCollection<string>> Roles(
-        ClaimsPrincipal user,
+        [Parent] User user,
         ISender sender,
         CancellationToken cancellationToken)
     {
-        return sender.Send(
-            new GetUserRolesQuery(
-                Guid.Parse(user.FindFirstValue(JwtRegisteredClaimNames.Sub)!)),
+        return sender.Send(new GetUserRolesQuery(user.Id),
             cancellationToken);
     }
 }

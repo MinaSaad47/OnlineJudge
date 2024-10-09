@@ -1,5 +1,8 @@
+using HotChocolate.Pagination;
 using HotChocolate.Types.Pagination;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using OnlineJudge.API.Application.Problems.Queries;
 using OnlineJudge.API.Domain.Entities;
 using OnlineJudge.API.Infrastructure.Persistence;
 
@@ -8,16 +11,14 @@ namespace OnlineJudge.API.Types.Problems;
 [QueryType]
 public static class ProblemQueries
 {
-    [UseOffsetPaging]
-    public static ValueTask<CollectionSegment<Problem>> GetProblemsAsync(
-        [Service] OnlineJudgeContext context,
-        int? skip,
-        int? take)
+    [UsePaging]
+    public static Task<Connection<Problem>> GetProblemsAsync(
+        PagingArguments pagingArgs,
+        ISender sender
+    )
     {
-        return context.Problems
-            .OrderBy(p => p.Title)
-            .ThenBy(p => p.Id)
-            .ApplyOffsetPaginationAsync(skip, take);
+        return sender.Send(new GetAllProblemsPaginatedQuery(pagingArgs))
+            .ToConnectionAsync();
     }
 
     [NodeResolver]

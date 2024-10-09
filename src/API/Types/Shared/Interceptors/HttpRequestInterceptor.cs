@@ -3,8 +3,8 @@ using HotChocolate.AspNetCore;
 using HotChocolate.Execution;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.JsonWebTokens;
+using OnlineJudge.API.Application.Session;
 using OnlineJudge.API.Domain.Entities;
-using OnlineJudge.API.Types.Shared;
 
 namespace OnlineJudge.API.Types.Interceptors;
 
@@ -16,20 +16,27 @@ public class HttpRequestInterceptor : DefaultHttpRequestInterceptor
         OperationRequestBuilder requestBuilder,
         CancellationToken cancellationToken)
     {
-        await base.OnCreateAsync(context,
-            requestExecutor,
-            requestBuilder,
-            cancellationToken);
+        OnlineJudgeSession session = new();
 
-
-        if (context.User.FindFirstValue(JwtRegisteredClaimNames.Sub) is string
+        if (context.User.FindFirstValue(JwtRegisteredClaimNames.Sub) is
+            {
+            }
             userId)
         {
             using var userManager = context.RequestServices
                 .GetRequiredService<UserManager<User>>();
             var user = await userManager.FindByIdAsync(userId);
-            requestBuilder.TryAddGlobalState(CurrentUserAttribute.StateName,
-                user);
+
+            session = session with { CurrentUser = user };
         }
+
+        requestBuilder.SetGlobalState(nameof(OnlineJudgeSession),
+            session);
+
+
+        await base.OnCreateAsync(context,
+            requestExecutor,
+            requestBuilder,
+            cancellationToken);
     }
 }

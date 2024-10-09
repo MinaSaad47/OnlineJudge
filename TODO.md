@@ -1,4 +1,4 @@
-- [ ] current user session
+- [x] current user session
 - [x] add problem
 - [ ] get problem details
   - [ ] get problem submissions

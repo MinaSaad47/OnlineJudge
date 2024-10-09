@@ -18,10 +18,12 @@ const documents = {
     "\n  mutation Login($input: LoginInput!) {\n    login(input: $input) {\n      accessToken\n      refreshToken\n      me {\n        userName\n      }\n      errors {\n        __typename\n        ... on Error {\n          message\n        }\n      }\n    }\n  }\n": types.LoginDocument,
     "\nmutation Register($input: RegisterInput!) {\n  register(input: $input) {\nme {\n    email\n}\naccessToken\nrefreshToken\nerrors {\n    __typename\n    ... on Error {\n        message\n    }\n}\n    }\n}\n    ": types.RegisterDocument,
     "\n  query ProblemPage_ProblemQuery($slug: String!) {\n    problemBySlug(slug: $slug) {\n      id\n      ... ProblemStatement_ProblemFragment\n      maxMemory\n      maxTime\n      testCases {\n        key\n        input\n        output\n        isSample\n      }\n    }\n  }\n": types.ProblemPage_ProblemQueryDocument,
-    "\n    fragment ProblemCell_ProblemFragment on Problem {\n        id\n        slug\n        title\n        maxMemoryString\n        maxTimeString\n        submissions {\n          items {\n            id\n          }\n        }\n    }\n": types.ProblemCell_ProblemFragmentFragmentDoc,
     "\n    query ProblemEditor_LanguagesQuery {\n        languages {\n            id\n            name\n        }\n    }\n": types.ProblemEditor_LanguagesQueryDocument,
+    "\n    fragment ProblemCell_ProblemFragment on Problem {\n        id\n        slug\n        title\n        maxMemoryString\n        maxTimeString\n    }\n": types.ProblemCell_ProblemFragmentFragmentDoc,
     "\n  fragment ProblemStatement_ProblemFragment on Problem {\n    title\n    description\n  }\n": types.ProblemStatement_ProblemFragmentFragmentDoc,
-    "\n  query ProblemsTable_ProblemsQuery($skip: Int!, $take: Int!) {\n    problems(skip: $skip, take: $take) {\n        items {\n            id\n            ... ProblemCell_ProblemFragment\n        }\n        pageInfo {\n            hasNextPage\n            hasPreviousPage\n        }\n    }\n  }\n": types.ProblemsTable_ProblemsQueryDocument,
+    "\n  query ProblemsTable_ProblemsQuery($after: String) {\n    \n    problems(first: 10, after: $after) {\n      edges {\n        node {\n          id\n          ... ProblemCell_ProblemFragment\n        }\n      }\n      pageInfo {\n        endCursor\n      }\n    }\n  }\n": types.ProblemsTable_ProblemsQueryDocument,
+    "\n  mutation SubmissionButton_SubmitAnswerMutation($input: SubmitAnswerInput!) {\n    submitAnswer(input: $input) {\n      submission {\n        id\n        status {\n          __typename\n          message\n        }\n        isFinished\n      }\n    }\n  }\n": types.SubmissionButton_SubmitAnswerMutationDocument,
+    "\n  subscription SubmissionButton_OnSubmissionSubscription($id: ID!) {\n  onSubmission(id: $id)    {\n    id\n    status {\n      __typename\n      message\n    }\n    isFinished\n  }\n  }\n": types.SubmissionButton_OnSubmissionSubscriptionDocument,
 };
 
 /**
@@ -61,11 +63,11 @@ export function gql(source: "\n  query ProblemPage_ProblemQuery($slug: String!) 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    fragment ProblemCell_ProblemFragment on Problem {\n        id\n        slug\n        title\n        maxMemoryString\n        maxTimeString\n        submissions {\n          items {\n            id\n          }\n        }\n    }\n"): (typeof documents)["\n    fragment ProblemCell_ProblemFragment on Problem {\n        id\n        slug\n        title\n        maxMemoryString\n        maxTimeString\n        submissions {\n          items {\n            id\n          }\n        }\n    }\n"];
+export function gql(source: "\n    query ProblemEditor_LanguagesQuery {\n        languages {\n            id\n            name\n        }\n    }\n"): (typeof documents)["\n    query ProblemEditor_LanguagesQuery {\n        languages {\n            id\n            name\n        }\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n    query ProblemEditor_LanguagesQuery {\n        languages {\n            id\n            name\n        }\n    }\n"): (typeof documents)["\n    query ProblemEditor_LanguagesQuery {\n        languages {\n            id\n            name\n        }\n    }\n"];
+export function gql(source: "\n    fragment ProblemCell_ProblemFragment on Problem {\n        id\n        slug\n        title\n        maxMemoryString\n        maxTimeString\n    }\n"): (typeof documents)["\n    fragment ProblemCell_ProblemFragment on Problem {\n        id\n        slug\n        title\n        maxMemoryString\n        maxTimeString\n    }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -73,7 +75,15 @@ export function gql(source: "\n  fragment ProblemStatement_ProblemFragment on Pr
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query ProblemsTable_ProblemsQuery($skip: Int!, $take: Int!) {\n    problems(skip: $skip, take: $take) {\n        items {\n            id\n            ... ProblemCell_ProblemFragment\n        }\n        pageInfo {\n            hasNextPage\n            hasPreviousPage\n        }\n    }\n  }\n"): (typeof documents)["\n  query ProblemsTable_ProblemsQuery($skip: Int!, $take: Int!) {\n    problems(skip: $skip, take: $take) {\n        items {\n            id\n            ... ProblemCell_ProblemFragment\n        }\n        pageInfo {\n            hasNextPage\n            hasPreviousPage\n        }\n    }\n  }\n"];
+export function gql(source: "\n  query ProblemsTable_ProblemsQuery($after: String) {\n    \n    problems(first: 10, after: $after) {\n      edges {\n        node {\n          id\n          ... ProblemCell_ProblemFragment\n        }\n      }\n      pageInfo {\n        endCursor\n      }\n    }\n  }\n"): (typeof documents)["\n  query ProblemsTable_ProblemsQuery($after: String) {\n    \n    problems(first: 10, after: $after) {\n      edges {\n        node {\n          id\n          ... ProblemCell_ProblemFragment\n        }\n      }\n      pageInfo {\n        endCursor\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation SubmissionButton_SubmitAnswerMutation($input: SubmitAnswerInput!) {\n    submitAnswer(input: $input) {\n      submission {\n        id\n        status {\n          __typename\n          message\n        }\n        isFinished\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation SubmissionButton_SubmitAnswerMutation($input: SubmitAnswerInput!) {\n    submitAnswer(input: $input) {\n      submission {\n        id\n        status {\n          __typename\n          message\n        }\n        isFinished\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  subscription SubmissionButton_OnSubmissionSubscription($id: ID!) {\n  onSubmission(id: $id)    {\n    id\n    status {\n      __typename\n      message\n    }\n    isFinished\n  }\n  }\n"): (typeof documents)["\n  subscription SubmissionButton_OnSubmissionSubscription($id: ID!) {\n  onSubmission(id: $id)    {\n    id\n    status {\n      __typename\n      message\n    }\n    isFinished\n  }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

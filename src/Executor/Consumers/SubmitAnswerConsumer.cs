@@ -16,6 +16,8 @@ public class SubmitAnswerConsumer(
 
     public async Task Consume(ConsumeContext<SubmitAnswerMessage> context)
     {
+        // await Task.Delay(TimeSpan.FromSeconds(5));
+
         var boxId = numberProvider.GetNextNumber();
 
         var workingDirectory = await GetWorkingDirectory(boxId);

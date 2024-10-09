@@ -4,15 +4,33 @@
     build:
       context: .
       dockerfile: src/Executor/Dockerfile
+    #      target: development
+    
+    privileged: true
+    env_file:
+      - .env
+  #    develop:
+  #      watch:
+  #        - action: rebuild
+  #          path: .
 
   onlinejudge.api:
     image: onlinejudge.api
     build:
       context: .
       dockerfile: src/API/Dockerfile
+    #      target: development
+    ports:
+      - 5000:8080
     depends_on:
       onlinejudge.db:
         condition: service_healthy
+    env_file:
+      - .env
+  #    develop:
+  #      watch:
+  #        - action: rebuild
+  #          path: .
   
   onlinejudge.db:
     image: postgres:16-alpine
@@ -25,6 +43,9 @@
       - "5432:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U onlinejudge -d onlinejudge" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     volumes:
       - onlinejudge-db-data:/var/lib/postgresql/data
   

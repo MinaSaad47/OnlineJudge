@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using HotChocolate.Execution.Configuration;
 using OnlineJudge.API.Application.Problems;
 using OnlineJudge.API.Domain.Entities;
@@ -24,6 +25,12 @@ public static partial class SubmissionNode
 
         descriptor
             .Field(s => s.Language);
+
+        descriptor
+            .Field(s => s.IsFinished);
+
+        descriptor
+            .Field(s => s.SubmittedAt);
     }
 
     public static ISubmissionStatus GetStatus([Parent] Submission submission)
@@ -53,18 +60,18 @@ public static partial class SubmissionNode
 
     public static async Task<Problem> GetProblemAsync(
         [Parent] Submission submission,
-        IProblemsByIdDataLoader problemsByIdDataLoader
+        IProblemByIdDataLoader problemByIdDataLoader
     )
     {
-        var problem =
-            await problemsByIdDataLoader.LoadAsync(submission.ProblemId);
-        return problem!;
+        return await problemByIdDataLoader.LoadAsync(submission.ProblemId) ??
+               throw new UnreachableException();
     }
 }
 
-[UnionType("Status")]
+[InterfaceType("Status")]
 public interface ISubmissionStatus
 {
+    string Message { get; }
 }
 
 public record SubmissionPending : ISubmissionStatus

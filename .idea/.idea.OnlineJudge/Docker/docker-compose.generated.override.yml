@@ -1,0 +1,68 @@
+# This is a generated file. Not intended for manual editing.
+services:
+  onlinejudge.api:
+    build:
+      context: "/home/mina/Documents/programing/dotnet/OnlineJudge"
+      dockerfile: "src/API/Dockerfile"
+      target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    command: []
+    entrypoint:
+    - "/opt/rider-debugger/linux-x64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    - "--timeout=60"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
+      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
+    image: "onlinejudge.api:dev"
+    ports:
+    - "127.0.0.1:57026:57100"
+    - "127.0.0.1:57226:57300"
+    volumes:
+    - "/home/mina/.nuget/packages:/home/app/.nuget/packages"
+    - "/home/mina/Documents/programing/dotnet/OnlineJudge/src/API:/app:rw"
+    - "/home/mina/Documents/programing/dotnet/OnlineJudge:/src:rw"
+    - "/home/mina/.local/share/JetBrains/RiderRemoteDebugger/2024.1.4/Linux64:/opt/rider-debugger"
+    - "/home/mina/.local/opt/JetBrains Rider-2024.1.4/bin:/etc/opt/rider-debugger/backend-log.xml"
+    - "/home/mina/.cache/JetBrains/Rider2024.1/log/DebuggerWorker/JetBrains.Debugger.Worker.2024_10_09_03_48_31:/var/opt/rider-debugger:rw"
+    working_dir: "/app"
+  onlinejudge.executor:
+    build:
+      context: "/home/mina/Documents/programing/dotnet/OnlineJudge"
+      dockerfile: "src/Executor/Dockerfile"
+      target: "base"
+      args:
+        BUILD_CONFIGURATION: "Debug"
+    command: []
+    entrypoint:
+    - "/opt/rider-debugger/linux-x64/JetBrains.Debugger.Worker"
+    - "--runtimeconfig"
+    - "/opt/rider-debugger/JetBrains.Debugger.Worker.runtimeconfig.json"
+    - "--mode=server"
+    - "--frontend-port=57100"
+    - "--backend-port=57300"
+    - "--timeout=60"
+    environment:
+      DOTNET_ENVIRONMENT: "Development"
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+      RIDER_DEBUGGER_LOG_DIR: "/var/opt/rider-debugger"
+      RESHARPER_LOG_CONF: "/etc/opt/rider-debugger/backend-log.xml"
+    image: "onlinejudge.executor:dev"
+    ports:
+    - "127.0.0.1:57027:57100"
+    - "127.0.0.1:57227:57300"
+    volumes:
+    - "/home/mina/.nuget/packages:/home/app/.nuget/packages"
+    - "/home/mina/Documents/programing/dotnet/OnlineJudge/src/Executor:/app:rw"
+    - "/home/mina/Documents/programing/dotnet/OnlineJudge:/src:rw"
+    - "/home/mina/.local/share/JetBrains/RiderRemoteDebugger/2024.1.4/Linux64:/opt/rider-debugger"
+    - "/home/mina/.local/opt/JetBrains Rider-2024.1.4/bin:/etc/opt/rider-debugger/backend-log.xml"
+    - "/home/mina/.cache/JetBrains/Rider2024.1/log/DebuggerWorker/JetBrains.Debugger.Worker.2024_10_09_03_48_31:/var/opt/rider-debugger:rw"
+    working_dir: "/app"

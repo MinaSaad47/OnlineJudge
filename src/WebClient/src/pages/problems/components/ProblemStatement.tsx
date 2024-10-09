@@ -19,7 +19,7 @@ function ProblemStatement(props: ProblemStatementProps) {
 
   return (
     <Card className='h-full'>
-      <CardHeader className='flex items-center justify-center text-xl font-bold text-white shadow-large'>
+      <CardHeader className='flex items-center justify-center h-8 font-bold text-white shadow-large'>
         {problem.title}
       </CardHeader>
       <CardBody className='h-0'>
@@ -29,6 +29,7 @@ function ProblemStatement(props: ProblemStatementProps) {
             className='p-6'
             style={{
               background: "transparent",
+              fontSize: "10pt",
             }}
           />
         </ScrollArea>

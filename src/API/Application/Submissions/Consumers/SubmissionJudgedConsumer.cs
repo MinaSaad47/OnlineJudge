@@ -1,14 +1,18 @@
 using System.Diagnostics;
+using HotChocolate.Subscriptions;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using OnlineJudge.API.Domain.Entities;
 using OnlineJudge.API.Infrastructure.Persistence;
+using OnlineJudge.API.Types;
 using OnlineJudge.Contracts.Messages;
 using TestCase = OnlineJudge.API.Domain.Entities.TestCase;
 
 namespace OnlineJudge.API.Application.Submissions.Consumers;
 
-public class SubmissionJudgedConsumer(OnlineJudgeContext context)
+public class SubmissionJudgedConsumer(
+    OnlineJudgeContext context,
+    ITopicEventSender eventSender)
     : IConsumer<SubmissionJudgedMessage>
 {
     public async Task Consume(
@@ -44,6 +48,11 @@ public class SubmissionJudgedConsumer(OnlineJudgeContext context)
             TestCase = testCase
         };
 
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(messageContext.CancellationToken);
+
+        await eventSender
+            .SendAsync(Topics.Submission + submission.Id,
+                submission,
+                messageContext.CancellationToken);
     }
 }

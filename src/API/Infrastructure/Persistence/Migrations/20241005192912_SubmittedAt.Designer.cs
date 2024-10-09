@@ -2,18 +2,21 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OnlineJudge.API.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace OnlineJudge.API.Persistence.Migrations
+namespace OnlineJudge.API.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(OnlineJudgeContext))]
-    partial class OnlineJudgeContextModelSnapshot : ModelSnapshot
+    [Migration("20241005192912_SubmittedAt")]
+    partial class SubmittedAt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

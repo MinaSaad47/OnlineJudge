@@ -7,7 +7,7 @@ namespace OnlineJudge.API.Application.Problems;
 public static class ProblemDataLoader
 {
     [DataLoader]
-    public static async Task<Dictionary<Guid, Problem>> GetProblemsByIdAsync(
+    public static async Task<Dictionary<Guid, Problem>> GetProblemByIdAsync(
         IReadOnlyList<Guid> ids,
         OnlineJudgeContext context,
         CancellationToken cancellationToken)
